@@ -1,0 +1,113 @@
+@if(!isConfigured){
+<form
+  class="elevator-config-form"
+  style="margin-bottom: 20px; padding: 20px; border: 1px solid #ccc; border-radius: 4px"
+>
+  <h3>Elevator Configuration</h3>
+  <div style="display: flex; gap: 20px; align-items: center">
+    <mat-form-field appearance="outline">
+      <mat-label>Number of Floors</mat-label>
+      <input matInput type="number" min="1" max="50" [(ngModel)]="floorCount" name="floorCount" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Number of Elevators</mat-label>
+      <input
+        matInput
+        type="number"
+        min="1"
+        max="6"
+        [(ngModel)]="elevatorCount"
+        name="elevatorCount"
+      />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Delay (seconds)</mat-label>
+      <input
+        matInput
+        type="number"
+        min="1"
+        max="60"
+        [(ngModel)]="delaysBetweenFloors"
+        name="delaysBetweenFloors"
+      />
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="button" (click)="setParameters()">
+      Apply Configuration
+    </button>
+  </div>
+</form>
+} @else{
+<div style="display: flex; gap: 20px; margin-top: 20px">
+  <div style="width: 70%">
+    <table mat-table [dataSource]="dataSource" class="compact-table">
+      <ng-container container matColumnDef="floorNumber">
+        <th mat-header-cell *matHeaderCellDef style="width: 20%">Floor</th>
+        <td mat-cell *matCellDef="let floor" class="label-style">{{ floor.id }}</td>
+      </ng-container>
+      <ng-container matColumnDef="elevators">
+        <th mat-header-cell *matHeaderCellDef style="width: 80%"></th>
+        <td mat-cell *matCellDef="let floor" class="label-style elevator-cell">
+          @for (elevator of floor.elevators; track $index) {
+          <div
+            class="elevator-car"
+            [ngClass]="{ active: elevator === floor.currentElevators?.includes(elevator) }"
+            style="display: inline-flex; align-items: center; margin-right: 10px"
+          >
+            @if(floor.currentElevators?.includes(elevator)){
+            <mat-icon>elevator</mat-icon>
+            @if (floor.currentElevators?.includes(elevator)){
+            <div class="floor-buttons">
+              <div class="floor-buttons-grid">
+                @for(floorNum of this.floors; track floorNum) {
+                <button
+                  mat-mini-fab
+                  color="primary"
+                  class="floor-btn"
+                  (click)="selectFloor(elevator, floorNum)"
+                >
+                  {{ floorNum }}
+                </button>
+                }
+              </div>
+            </div>
+            } }
+          </div>
+          }
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let floor" class="label-style elevator-cell">
+          <div class="elevator-shaft">
+            @if(floor.id != floorCount) {
+            <button mat-icon-button (click)="callElevator(floor.id, 'Up')">
+              <mat-icon>keyboard_arrow_up</mat-icon>
+            </button>
+            } @if(floor.id != minFloor) {
+            <button
+              mat-icon-button
+              (click)="callElevator(floor.id, 'Down')"
+              [disabled]="floor.floorNumber === minFloor"
+            >
+              <mat-icon>keyboard_arrow_down</mat-icon>
+            </button>
+            }
+          </div>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </div>
+  <div style="width: 30%">
+    <ul>
+      @for (action of actions; track $index) {
+      <li>{{ action }}</li>
+      }
+    </ul>
+  </div>
+</div>
+}
