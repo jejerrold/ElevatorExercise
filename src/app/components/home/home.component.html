@@ -54,26 +54,19 @@
           <div
             class="elevator-car"
             [ngClass]="{ active: elevator === floor.currentElevators?.includes(elevator) }"
-            style="display: inline-flex; align-items: center; margin-right: 10px"
+            style="display: inline-table; align-items: center; margin-right: 10px"
           >
-            @if(floor.currentElevators?.includes(elevator)){
-            <mat-icon>elevator</mat-icon>
-            @if (floor.currentElevators?.includes(elevator)){
             <div class="floor-buttons">
+              @if (floor.currentElevators?.includes(elevator)){
               <div class="floor-buttons-grid">
                 @for(floorNum of this.floors; track floorNum) {
-                <button
-                  mat-mini-fab
-                  color="primary"
-                  class="floor-btn"
-                  (click)="selectFloor(elevator, floorNum)"
-                >
+                <button color="primary" class="floor-btn" (click)="selectFloor(elevator, floorNum)">
                   {{ floorNum }}
                 </button>
                 }
               </div>
+              }
             </div>
-            } }
           </div>
           }
         </td>

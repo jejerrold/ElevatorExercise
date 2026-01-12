@@ -24,14 +24,16 @@ import { Elevator } from '../../models/elevator';
 export class HomeComponent implements OnInit {
   dataSource = new MatTableDataSource<Floor>([]);
   displayedColumns: string[] = ['floorNumber', 'elevators', 'actions'];
-  floorCount: number = 10;
   floors: number[] = [];
-  elevatorCount: number = 4;
   minFloor: number = 1;
   requestedFloors: number[] = [];
-  delaysBetweenFloors: number = 10; // in milliseconds
   actions: string[] = [];
   isConfigured: boolean = false;
+
+  //default parameters
+  floorCount: number = 10;
+  elevatorCount: number = 4;
+  delaysBetweenFloors: number = 3;
 
   constructor(private cdr: ChangeDetectorRef) {}
 
